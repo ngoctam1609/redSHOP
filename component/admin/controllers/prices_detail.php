@@ -65,7 +65,16 @@ class RedshopControllerPrices_detail extends RedshopController
         /** @var RedshopModelPrices_detail $model */
         $model = $this->getModel('prices_detail');
 
-        $row = $model->store($post);
+        if($post['product_price'] > $post['discount_price']) {
+            $row = $model->store($post);
+        }else{
+            $msg = JText::_('COM_REDSHOP_PRODUCT_PRICE_MUST_MORE_THAN_DISCOUNT_PRICE');
+            return $this->setRedirect(
+                'index.php?option=com_redshop&view=prices_detail&task=edit&product_id=' . $productId . '&cid[]=' . $post ['price_id'],
+                $msg,
+                $type
+            );
+        }
 
         $msg = JText::_('COM_REDSHOP_ERROR_SAVING_PRICE_QUNTITY_DETAIL');
 
